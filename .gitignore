@@ -28,6 +28,10 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# local server + tunnel logs
+dev-server.log
+tunnel.log
+
 # vercel
 .vercel
 
