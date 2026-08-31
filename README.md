@@ -1,140 +1,81 @@
 # ALIG MINDS Learning Network
 
-Ek all-in-one tuition + edtech platform — tutors, courses, mock tests aur study material ek hi jagah.
+A focused education-services website built with Next.js 14, TypeScript, Tailwind CSS, Supabase and Razorpay.
 
-Built with **Next.js 14 (App Router) + TypeScript + Tailwind CSS + Supabase**.
+## Business model implemented
 
----
+- **Find the Right Tutor**: parents/students submit a tutor requirement; enquiries are stored in Supabase and managed from `/admin/enquiries`.
+- **Become a Tutor**: tutors create a teaching profile, optionally upload a certificate, pay the **₹100 registration fee through Razorpay**, and enter the admin verification queue only after payment is verified.
+- **Entrance & Board Preparation**: AMU, JMI, Classes 6/9/11, undergraduate entrances, CUET, NCET and board-preparation enquiries are routed to WhatsApp. There is no lecture/video-course checkout system.
+- **Notes / Books / PYQs**: admins upload real PDFs, choose free or paid access, publish them to the storefront, and students can buy paid PDFs through Razorpay.
+- **Student Library**: verified paid purchases appear under `/dashboard`; private PDFs are delivered with short-lived Supabase signed URLs.
+- **Admin**: tutor enquiries, tutor registrations, study PDFs, customers and payments are managed from `/admin`.
 
-## 🚀 What's built (MVP)
+All customer-facing copy is intended to remain in English.
 
-**Public site**
-- Home page (hero, offerings, course/test/material previews, CTA)
-- **Need a Tutor** form → saves to Supabase `tutor_enquiries`
-- **Become a Tutor** form → saves to `tutor_registrations` (with optional certificate upload)
-- Static listing pages: Tuition, Courses, Mock Tests, Study Material
-- Course detail page, Mock Test player (timer + auto-submit + scoring)
-- About, Contact, 404, sitemap.xml, robots.txt
-- Floating **WhatsApp click-to-chat** button everywhere
+## Local setup
 
-**Student** (`/login`, `/dashboard`)
-- Email/password signup + login via Supabase Auth
-- Dashboard with courses, test attempts, result history
+1. Install dependencies:
 
-**Admin** (`/admin` — role-protected, Samad only)
-- Overview stats
-- Tutor Enquiries (status tracking) + Tutor Registrations (approve/reject gate)
-- Students, Courses, Material, Tests, Payments tables
-
----
-
-## ✅ Step-by-step setup (from zero to running)
-
-### Step 0 — Prerequisites
-- [Node.js LTS](https://nodejs.org) installed (v18+). Already installed here.
-- A [Supabase](https://supabase.com) account (free tier is fine for MVP).
-- Optional: a [Vercel](https://vercel.com) account (free) for hosting later.
-
-### Step 1 — Install dependencies
 ```bash
 npm install
 ```
 
-### Step 2 — Create your Supabase project
-1. Go to https://supabase.com → **Start your project** (free tier).
-2. Pick a region close to India.
-3. Note your **Database Password** — you'll only see it once.
+2. Create `.env.local` from `.env.local.example` and add:
 
-### Step 3 — Run the database schema
-1. In Supabase dashboard, open **SQL Editor** → **New query**.
-2. Copy the entire contents of **`supabase/schema.sql`** and paste it in.
-3. Click **Run**. (You should see "Success, no rows returned" — that's normal.)
-4. This creates all tables + row-level-security policies.
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+RAZORPAY_KEY_ID=rzp_test_or_live_key
+RAZORPAY_KEY_SECRET=your-razorpay-secret
+```
 
-### Step 4 — Create the tutor-certificates storage bucket (for tutor ID uploads)
-1. In Supabase dashboard → **Storage** → **New bucket**.
-2. Name it exactly: `tutor-certificates`
-3. Make it **Public** (only files placed here by tutors; fine for MVP).
+`SUPABASE_SERVICE_ROLE_KEY` and `RAZORPAY_KEY_SECRET` are server-only secrets. Never expose them with a `NEXT_PUBLIC_` prefix and never commit real values.
 
-### Step 5 — Plug in your API keys
-1. In Supabase dashboard → **Project Settings** → **API**.
-2. Copy the **Project URL** and the **anon public key**.
-3. Open **`.env.local`** (already created for you) and fill in the two values:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT-ref.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
-   ```
+3. In Supabase SQL Editor, run:
 
-### Step 6 — Make YOURSELF admin
-The admin panel only opens for users with `role = 'admin'` in the `users` table.
-1. First, sign up as a normal user at `http://localhost:3000/login`.
-2. Go to Supabase dashboard → **Table Editor** → `users`.
-3. Find your row and change `role` from `student` → `admin`.
-4. Now `/admin` will work for you.
+- `supabase/schema.sql`
+- `supabase/production-upgrade.sql`
 
-### Step 7 — Run it
+The second file creates the private `study-materials` bucket, tutor-certificate bucket, storage policies and the paid-material purchase uniqueness rule.
+
+4. Create your first account at `/login`, then in the Supabase `users` table change that account's `role` to `admin`.
+
+5. Run:
+
 ```bash
 npm run dev
 ```
-Open http://localhost:3000
 
-Test it: submit the **Need a Tutor** form, then check Supabase → Table Editor → `tutor_enquiries` — your entry should be there. ✓
+## Admin workflow
 
----
+Open `/admin/material` to upload a PDF and create its listing. Set **Free PDF** when no payment should be required; otherwise enter the price. Keep **Published** enabled to show it publicly.
 
-## 🔑 Where everything lives
+Paid PDF flow:
 
-| You want to... | Where you go |
-|---|---|
-| See form submissions | Supabase → Table Editor → `tutor_enquiries` / `tutor_registrations` |
-| Approve/reject tutors | `/admin/tutors` (in the app) |
-| Add a course / test / material | Supabase → Table Editor (add rows to the tables) |
-| Upload study PDFs | Supabase → **Storage** bucket + set the path in the `study_material` row |
-| Change brand name / WhatsApp number / contact | `lib/site.ts` |
-| Change colors/theme | `tailwind.config.ts` (the `brand` palette) |
+1. Student opens `/study-material/[id]`.
+2. Student signs in or creates an account.
+3. Razorpay order is created server-side from the price stored in Supabase.
+4. Razorpay signature, payment status, order status and amount are verified server-side.
+5. A paid purchase grant is recorded for the authenticated user.
+6. `/material-access/[id]` checks the purchase before generating a short-lived signed PDF URL.
 
----
+Tutor-registration flow follows the same server-verified pattern for the fixed ₹100 fee.
 
-## 🌍 Deploy to production (Vercel)
+## Production deployment on Vercel
 
-1. Push this folder to a GitHub repo.
-2. On [vercel.com](https://vercel.com) → **New Project** → import the repo.
-3. Add the same env vars from `.env.local` (Project Settings → Environment Variables).
-4. Set `NEXT_PUBLIC_APP_URL` to your production URL (e.g. `https://aligminds.in`).
-5. In Supabase → **Authentication** → **URL Configuration** → add your production URL to the Site URL + redirect allow list (and change the email redirect in `lib/actions.ts` if needed — it already reads `NEXT_PUBLIC_APP_URL`).
-6. Deploy. ✅
+Add every variable from `.env.local.example` to Vercel Project Settings → Environment Variables. Use the production site URL for `NEXT_PUBLIC_APP_URL`.
 
----
+In Supabase Authentication URL Configuration, add the production domain as the Site URL and an allowed redirect URL.
 
-## 🔜 Deliberately deferred to v2 (per MVP cut)
-- Razorpay payments + auto-enrolment (currently a WhatsApp CTA placeholder)
-- Automated email/WhatsApp admin notifications (Resend + Interakt/Zapier)
-- Multi-staff admin permissions (single admin now)
-- Signed-URL gating for paid PDFs (paid material access control)
-- Live online classes, tutor self-login dashboard, referrals
+In Razorpay, use test keys while validating the full checkout flow, then replace them with live keys for production. Do not hard-code keys in the repository.
 
----
+## Client configuration still required
 
-## 📁 Project structure
-```
-app/
-  page.tsx            Home
-  tuition/ courses/ mock-tests/ study-material/ about/ contact/
-  need-a-tutor/ become-a-tutor/      forms
-  login/ dashboard/                  auth + student app
-  auth/callback/                     OTP/email redirect
-  admin/                             protected admin panel
-  sitemap.ts robots.ts not-found.tsx
-components/
-  Navbar Footer WhatsAppButton ui.tsx
-  forms/                             enquiry + registration forms
-  admin/                             admin tables
-  TestPlayer.tsx                     mock test engine (timer/scoring)
-lib/
-  supabase/client.ts supabase/server.ts
-  site.ts                            all branding/contact config
-  actions.ts                        auth server actions
-  types.ts queries.ts admin.ts admin-data.ts
-supabase/schema.sql                  full DB + RLS (run once)
-```
+Update `lib/site.ts` with the client's real WhatsApp number, phone number, email, address and production domain. The repository currently keeps placeholder contact data intentionally so private client details are not invented.
+
+## Legacy routes
+
+Old `/courses`, `/mock-tests` and `/tuition` URLs are retained only as redirects so old bookmarks do not break. They no longer expose a course or mock-test marketplace.
