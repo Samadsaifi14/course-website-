@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { StudyMaterial } from "@/lib/types";
 
@@ -15,21 +16,23 @@ export function MaterialManager() {
   const [message, setMessage] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  async function load() {
+  const load = useCallback(async () => {
     const { data, error: loadError } = await supabase.from("study_material").select("*").order("created_at", { ascending: false });
     if (loadError) setError(loadError.message);
     else setRows((data as StudyMaterial[]) ?? []);
     setLoading(false);
-  }
+  }, [supabase]);
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => { void load(); }, [load]);
 
-  async function createMaterial(formData: FormData) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
     setSaving(true); setError(null); setMessage(null);
     const file = formData.get("pdf") as File | null;
     const isFree = formData.get("is_free") === "on";
     const price = isFree ? 0 : Number(formData.get("price") || 0);
-    if (!file || file.size === 0 || file.type !== "application/pdf") { setError("Please upload a PDF file."); setSaving(false); return; }
+    if (!file || file.size === 0 || (file.type && file.type !== "application/pdf")) { setError("Please upload a PDF file."); setSaving(false); return; }
     if (!isFree && (!Number.isFinite(price) || price < 1)) { setError("Set a valid price for paid material."); setSaving(false); return; }
 
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_");
@@ -74,8 +77,8 @@ export function MaterialManager() {
 
   return (
     <div className="space-y-8">
-      <form ref={formRef} action={createMaterial} className="rounded-2xl border border-stone-200 bg-white p-6">
-        <div className="flex flex-col justify-between gap-2 sm:flex-row"><div><h2 className="text-lg font-bold text-stone-900">Publish a PDF</h2><p className="mt-1 text-sm text-stone-500">Upload the file and create its storefront listing in one step.</p></div></div>
+      <form ref={formRef} onSubmit={handleSubmit} className="rounded-2xl border border-stone-200 bg-white p-6">
+        <div><h2 className="text-lg font-bold text-stone-900">Publish a PDF</h2><p className="mt-1 text-sm text-stone-500">Upload the file and create its storefront listing in one step.</p></div>
         {error && <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
         {message && <p className="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">{message}</p>}
         <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -87,7 +90,7 @@ export function MaterialManager() {
           <div><label className="mb-1 block text-sm font-medium">Price (₹)</label><input name="price" type="number" min="0" step="1" className={input} placeholder="99" /></div>
         </div>
         <div className="mt-5 flex flex-wrap gap-6 text-sm"><label className="flex items-center gap-2"><input name="is_free" type="checkbox" /> Free PDF</label><label className="flex items-center gap-2"><input name="is_published" type="checkbox" defaultChecked /> Published</label></div>
-        <button disabled={saving} className="mt-6 rounded-full bg-[#17352d] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Publishing..." : "Upload & Publish PDF"}</button>
+        <button type="submit" disabled={saving} className="mt-6 rounded-full bg-[#17352d] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">{saving ? "Publishing..." : "Upload & Publish PDF"}</button>
       </form>
 
       <div>
