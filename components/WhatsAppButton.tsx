@@ -5,15 +5,17 @@ import { whatsappLink } from "@/lib/site";
 export function WhatsAppButton() {
   return (
     <a
-      href={whatsappLink("Namaste! Mujhe aapke baare mein janna hai.")}
+      href={whatsappLink("Hello ALIG MINDS, I have a query and would like to speak with your team.")}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 shadow-lg transition hover:bg-green-600"
-      aria-label="Chat on WhatsApp"
+      className="fixed bottom-5 right-4 z-50 flex items-center gap-2 rounded-full bg-[#1f6f55] px-4 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[#185b46] sm:right-5"
+      aria-label="Any query? Chat on WhatsApp"
     >
-      <svg viewBox="0 0 32 32" className="h-7 w-7 fill-white">
+      <svg viewBox="0 0 32 32" className="h-5 w-5 fill-white" aria-hidden="true">
         <path d="M16.004 3C8.83 3 3 8.83 3 16.004c0 2.29.6 4.53 1.74 6.5L3 29l6.62-1.73a12.96 12.96 0 0 0 6.38 1.63h.005C23.17 28.9 29 23.07 29 15.9 29 12.02 27.49 8.37 24.8 5.68A12.9 12.9 0 0 0 16.004 3zm0 23.55c-1.95 0-3.85-.52-5.52-1.5l-.4-.24-3.94 1.03 1.05-3.83-.26-.41a10.52 10.52 0 0 1-1.62-5.6c0-5.81 4.73-10.54 10.55-10.54 2.82 0 5.47 1.1 7.46 3.09a10.5 10.5 0 0 1 3.09 7.47c0 5.82-4.73 10.53-10.55 10.53h.14zm5.8-7.9c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.84-1.59-1.89-1.78-2.21-.19-.32-.02-.49.14-.65.14-.14.32-.38.48-.57.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.63-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.65s1.14 3.07 1.29 3.28c.16.21 2.23 3.41 5.41 4.78.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.08 1.89-.77 2.15-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37z" />
       </svg>
+      <span className="hidden sm:inline">Any Query? Chat on WhatsApp</span>
+      <span className="sm:hidden">WhatsApp</span>
     </a>
   );
 }

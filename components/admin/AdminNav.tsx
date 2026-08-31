@@ -2,55 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "@/lib/actions";
 
 const links = [
-  { href: "/admin", label: "Overview", icon: "🏠" },
-  { href: "/admin/enquiries", label: "Tutor Enquiries", icon: "📥" },
-  { href: "/admin/tutors", label: "Tutor Registrations", icon: "👨‍🏫" },
-  { href: "/admin/students", label: "Students", icon: "🎓" },
-  { href: "/admin/courses", label: "Courses", icon: "📚" },
-  { href: "/admin/material", label: "Study Material", icon: "📄" },
-  { href: "/admin/tests", label: "Mock Tests", icon: "⏱️" },
-  { href: "/admin/payments", label: "Payments", icon: "💳" },
+  { href: "/admin", label: "Overview" },
+  { href: "/admin/enquiries", label: "Tutor Enquiries" },
+  { href: "/admin/tutors", label: "Tutor Registrations" },
+  { href: "/admin/material", label: "Study Material" },
+  { href: "/admin/students", label: "Customers" },
+  { href: "/admin/payments", label: "Payments" },
 ];
 
 export function AdminNav() {
   const pathname = usePathname();
-
   return (
-    <aside className="w-full border-b border-slate-200 bg-white md:w-64 md:border-b-0 md:border-r">
-      <div className="flex items-center justify-between gap-4 px-4 py-4">
-        <Link href="/admin" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-            A
-          </span>
-          <span className="font-extrabold text-slate-900">Admin</span>
-        </Link>
-        <form action={signOut}>
-          <button className="text-xs text-slate-400 hover:text-red-500">Log out</button>
-        </form>
+    <aside className="border-b border-stone-200 bg-[#17352d] text-white md:min-h-screen md:w-64 md:border-b-0 md:border-r md:border-white/10">
+      <div className="p-5">
+        <Link href="/" className="block"><span className="text-lg font-bold">ALIG MINDS</span><span className="mt-1 block text-xs uppercase tracking-[0.16em] text-stone-300">Admin</span></Link>
+        <nav className="mt-7 flex gap-2 overflow-x-auto md:flex-col">
+          {links.map((link) => {
+            const active = link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
+            return <Link key={link.href} href={link.href} className={`whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-medium transition ${active ? "bg-white text-[#17352d]" : "text-stone-200 hover:bg-white/10 hover:text-white"}`}>{link.label}</Link>;
+          })}
+        </nav>
       </div>
-      <nav className="flex overflow-x-auto gap-1 px-2 pb-2 md:flex-col md:pb-4">
-        {links.map((l) => {
-          const active =
-            l.href === "/admin" ? pathname === "/admin" : pathname.startsWith(l.href);
-          return (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                active
-                  ? "bg-brand-50 text-brand-700"
-                  : "text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              <span>{l.icon}</span>
-              <span>{l.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
     </aside>
   );
 }

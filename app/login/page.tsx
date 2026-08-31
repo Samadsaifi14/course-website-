@@ -3,102 +3,39 @@ import Link from "next/link";
 import { Container } from "@/components/ui";
 import { signIn, signUp } from "@/lib/actions";
 
-export const metadata: Metadata = {
-  title: "Login",
-};
+export const metadata: Metadata = { title: "Student Library Login" };
+const inputBase = "w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 placeholder-stone-400 outline-none focus:border-[#397662] focus:ring-2 focus:ring-[#bad4c8]";
 
-const inputBase =
-  "w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200";
-
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string; message?: string };
-}) {
-  const error = searchParams.error;
-  const message = searchParams.message;
-
+export default function LoginPage({ searchParams }: { searchParams: { error?: string; message?: string; next?: string } }) {
+  const next = searchParams.next && searchParams.next.startsWith("/") && !searchParams.next.startsWith("//") ? searchParams.next : "/dashboard";
   return (
-    <section className="bg-slate-50 py-14">
+    <section className="bg-[#f7f3ea] py-14 sm:py-20">
       <Container>
-        <div className="mx-auto max-w-md">
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h1 className="text-2xl font-extrabold text-slate-900">Student Login</h1>
-            <p className="mt-1 text-sm text-slate-600">Apne account mein login karein</p>
+        <div className="mx-auto max-w-lg border border-stone-300 bg-white p-7 sm:p-10">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#8b6b42]">Student Library</p>
+          <h1 className="mt-3 font-serif text-4xl font-semibold tracking-[-0.035em] text-[#17352d]">Sign in to access your PDFs.</h1>
+          <p className="mt-3 text-sm leading-6 text-stone-600">An account is required for paid PDF purchases so your access remains available after checkout.</p>
+          {(searchParams.error || searchParams.message) && <div className={`mt-5 rounded-lg px-4 py-3 text-sm ${searchParams.error ? "bg-red-50 text-red-700" : "bg-[#edf4f0] text-[#17352d]"}`}>{searchParams.error || searchParams.message}</div>}
 
-            {(error || message) && (
-              <div
-                className={`mt-4 rounded-lg px-4 py-2 text-sm ${
-                  error ? "bg-red-50 text-red-700" : "bg-blue-50 text-blue-700"
-                }`}
-              >
-                {error || message}
-              </div>
-            )}
-
-            <form action={signIn} className="mt-6 space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
-                <input name="email" type="email" required className={inputBase} placeholder="you@example.com" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
-                <input name="password" type="password" required className={inputBase} placeholder="••••••••" />
-                <div className="mt-1 text-right">
-                  <Link href="/forgot-password" className="text-xs text-brand-600 hover:underline">
-                    Forgot Password?
-                  </Link>
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white hover:bg-brand-700"
-              >
-                Login
-              </button>
-            </form>
-
-            <div className="my-6 flex items-center gap-3 text-xs text-slate-400">
-              <div className="h-px flex-1 bg-slate-200" />
-              OR
-              <div className="h-px flex-1 bg-slate-200" />
+          <form action={signIn} className="mt-7 space-y-4">
+            <input type="hidden" name="next" value={next} />
+            <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Email</label><input name="email" type="email" required className={inputBase} placeholder="you@example.com" /></div>
+            <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Password</label><input name="password" type="password" required className={inputBase} placeholder="Your password" />
+              <div className="mt-1 text-right"><Link href="/forgot-password" className="text-xs text-[#397662] hover:underline">Forgot Password?</Link></div>
             </div>
+            <button type="submit" className="w-full rounded-full bg-[#17352d] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#24493f]">Sign In</button>
+          </form>
 
-            <form action={signUp} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Full Name</label>
-                <input name="name" className={inputBase} placeholder="Aapka naam" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Email</label>
-                <input name="email" type="email" required className={inputBase} placeholder="you@example.com" />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  minLength={6}
-                  className={inputBase}
-                  placeholder="Minimum 6 characters"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-full border border-brand-600 px-6 py-3 text-sm font-semibold text-brand-600 hover:bg-brand-50"
-              >
-                Create Account
-              </button>
-            </form>
-          </div>
+          <div className="my-7 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-stone-400"><div className="h-px flex-1 bg-stone-200" />New student<div className="h-px flex-1 bg-stone-200" /></div>
 
-          <p className="mt-4 text-center text-xs text-slate-500">
-            Tutor banne ke liye form bharein —{" "}
-            <Link href="/become-a-tutor" className="text-brand-600 hover:underline">
-              Become a Tutor
-            </Link>
-          </p>
+          <form action={signUp} className="space-y-4">
+            <input type="hidden" name="next" value={next} />
+            <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Full Name</label><input name="name" required className={inputBase} placeholder="Your full name" /></div>
+            <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Email</label><input name="email" type="email" required className={inputBase} placeholder="you@example.com" /></div>
+            <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Password</label><input name="password" type="password" required minLength={6} className={inputBase} placeholder="Minimum 6 characters" /></div>
+            <button type="submit" className="w-full rounded-full border border-[#17352d] px-6 py-3.5 text-sm font-semibold text-[#17352d] hover:bg-[#edf4f0]">Create Student Account</button>
+          </form>
+          <p className="mt-7 border-t border-stone-200 pt-6 text-center text-xs text-stone-500">Want to join the teaching network? <Link href="/become-a-tutor" className="font-semibold text-[#17352d] underline">Become a Tutor</Link></p>
         </div>
       </Container>
     </section>

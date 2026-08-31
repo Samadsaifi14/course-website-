@@ -3,63 +3,35 @@ import { siteConfig, whatsappLink } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-slate-50">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-              A
-            </span>
-            <span className="text-lg font-extrabold text-slate-900">
-              {siteConfig.shortName}
-            </span>
-          </div>
-          <p className="mt-3 max-w-md text-sm text-slate-600">
-            {siteConfig.description}
-          </p>
-        </div>
-
+    <footer className="border-t border-stone-200 bg-[#f7f3ea]">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.4fr_0.7fr_0.7fr]">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Quick Links</h3>
-          <ul className="mt-3 space-y-2 text-sm text-slate-600">
-            <li><Link className="hover:text-brand-600" href="/tuition">Home Tuition</Link></li>
-            <li><Link className="hover:text-brand-600" href="/tuition">Online Tuition</Link></li>
-            <li><Link className="hover:text-brand-600" href="/courses">Courses</Link></li>
-            <li><Link className="hover:text-brand-600" href="/mock-tests">Mock Tests</Link></li>
-            <li><Link className="hover:text-brand-600" href="/study-material">Study Material</Link></li>
+          <p className="font-serif text-2xl font-semibold text-[#17352d]">{siteConfig.shortName}</p>
+          <p className="mt-3 max-w-md text-sm leading-6 text-stone-600">{siteConfig.description}</p>
+          <a href={whatsappLink("Hello ALIG MINDS, I have a query and would like to speak with your team.")} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex rounded-full bg-[#1f6f55] px-5 py-2.5 text-sm font-semibold text-white">Chat on WhatsApp</a>
+        </div>
+        <div>
+          <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-[#8b6b42]">Explore</h3>
+          <ul className="mt-4 space-y-3 text-sm text-stone-600">
+            <li><Link className="hover:text-[#17352d]" href="/need-a-tutor">Find a Tutor</Link></li>
+            <li><Link className="hover:text-[#17352d]" href="/become-a-tutor">Become a Tutor</Link></li>
+            <li><Link className="hover:text-[#17352d]" href="/preparation">Entrance & Board Preparation</Link></li>
+            <li><Link className="hover:text-[#17352d]" href="/study-material">Notes, Books & PYQs</Link></li>
+            <li><Link className="hover:text-[#17352d]" href="/dashboard">My Study Library</Link></li>
           </ul>
         </div>
-
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Contact</h3>
-          <ul className="mt-3 space-y-2 text-sm text-slate-600">
+          <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-[#8b6b42]">Contact</h3>
+          <ul className="mt-4 space-y-3 text-sm text-stone-600">
             <li>{siteConfig.contact.email}</li>
             <li>{siteConfig.contact.phone}</li>
             <li>{siteConfig.contact.address}</li>
-            <li>
-              <a
-                className="font-medium text-green-600 hover:underline"
-                href={whatsappLink("Namaste! Mujhe ALIG MINDS ke baare mein jaanna hai.")}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                WhatsApp us
-              </a>
-            </li>
+            <li><Link className="hover:text-[#17352d]" href="/about">About ALIG MINDS</Link></li>
+            <li><Link className="hover:text-[#17352d]" href="/contact">Contact Us</Link></li>
           </ul>
         </div>
       </div>
-
-      <div className="border-t border-slate-200">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-slate-500 sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          <div className="flex gap-4">
-            <a href={siteConfig.social.instagram} className="hover:text-brand-600">Instagram</a>
-            <a href={siteConfig.social.facebook} className="hover:text-brand-600">Facebook</a>
-            <a href={siteConfig.social.youtube} className="hover:text-brand-600">YouTube</a>
-          </div>
-        </div>
-      </div>
+      <div className="border-t border-stone-200"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-2 px-4 py-5 text-xs text-stone-500 sm:flex-row sm:px-6"><p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p><p>Tutor matching · Preparation enquiries · Study PDFs</p></div></div>
     </footer>
   );
 }

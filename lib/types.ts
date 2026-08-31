@@ -21,6 +21,7 @@ export interface TutorRegistration {
   location?: string;
   id_certificate_url?: string;
   status: "pending" | "approved" | "rejected";
+  notes?: string;
   created_at: string;
 }
 
@@ -43,6 +44,7 @@ export interface StudyMaterial {
   class?: string;
   subject?: string;
   year?: string;
+  file_url?: string;
   is_free: boolean;
   price: number;
   is_published: boolean;
@@ -79,6 +81,7 @@ export interface Purchase {
   item_id: string;
   amount: number;
   razorpay_payment_id?: string;
+  razorpay_order_id?: string;
   status: "pending" | "paid" | "failed" | "refunded";
   created_at: string;
 }
