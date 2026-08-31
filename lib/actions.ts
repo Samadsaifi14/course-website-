@@ -45,6 +45,35 @@ export async function signIn(formData: FormData) {
   redirect("/dashboard");
 }
 
+export async function resetPassword(formData: FormData) {
+  const supabase = await createClient();
+  const email = String(formData.get("email") || "");
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/update-password`,
+  });
+
+  if (error) {
+    redirect(`/forgot-password?error=${encodeURIComponent(error.message)}`);
+  }
+
+  redirect("/forgot-password?message=Check your email for a password reset link");
+}
+
+export async function updatePassword(formData: FormData) {
+  const supabase = await createClient();
+  const password = String(formData.get("password") || "");
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    redirect(`/update-password?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/login?message=Password updated successfully. Please login.");
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
