@@ -6,7 +6,7 @@ A focused education-services website built with Next.js 14, TypeScript, Tailwind
 
 - **Find the Right Tutor**: parents/students submit a tutor requirement; enquiries are stored in Supabase and managed from `/admin/enquiries`.
 - **Become a Tutor**: tutors create a teaching profile, optionally upload a certificate, pay the **₹100 registration fee through Razorpay**, and enter the admin verification queue only after payment is verified.
-- **Entrance & Board Preparation**: AMU, JMI, Classes 6/9/11, undergraduate entrances, CUET, NCET and board-preparation enquiries are routed to WhatsApp. There is no lecture/video-course checkout system.
+- **Entrance & Board Preparation**: AMU, JMI, Classes 6/9/11, undergraduate entrances, CUET, NEET and board-preparation enquiries are routed to WhatsApp. There is no lecture/video-course checkout system.
 - **Notes / Books / PYQs**: admins upload real PDFs, choose free or paid access, publish them to the storefront, and students can buy paid PDFs through Razorpay.
 - **Student Library**: verified paid purchases appear under `/dashboard`; private PDFs are delivered with short-lived Supabase signed URLs.
 - **Admin**: tutor enquiries, tutor registrations, study PDFs, customers and payments are managed from `/admin`.

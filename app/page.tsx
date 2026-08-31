@@ -45,7 +45,7 @@ const preparationAreas = [
   "B.A. (Foreign Languages)",
   "B.A. LL.B.",
   "CUET",
-  "NCET",
+  "NEET",
   "Board Examination Preparation",
 ];
 

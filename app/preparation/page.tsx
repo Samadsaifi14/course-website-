@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Speak with ALIG MINDS about AMU, JMI, school entrance, undergraduate entrance and board examination preparation.",
 };
 
-const areas = ["AMU Entrance", "JMI Entrance", "Class 6 Entrance", "Class 9 Entrance", "Class 11 Entrance", "B.A. Entrance", "B.A. Foreign Languages", "B.A. LL.B.", "CUET", "NCET", "Board Examination Preparation"];
+const areas = ["AMU Entrance", "JMI Entrance", "Class 6 Entrance", "Class 9 Entrance", "Class 11 Entrance", "B.A. Entrance", "B.A. Foreign Languages", "B.A. LL.B.", "CUET", "NEET", "Board Examination Preparation"];
 
 export default function PreparationPage() {
   const link = whatsappLink("Hello ALIG MINDS, I am interested in entrance or board examination preparation. Please share the suitable preparation options and details.");
